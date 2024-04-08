@@ -1,3 +1,5 @@
+//BufferedReader를 사용한 Bottom-Up 풀이
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
