@@ -23,13 +23,15 @@ public class Main{
             dp[i] = 1;
             
             for(int j=0; j<i; j++){
-                
+
+                //j번째 원소가 i번째 원소보다 작으면서 i번째 dp가 j번째 dp+1 값보다 작으면
                 if(seq[j]<seq[i] && dp[i]<dp[j]+1){
                     dp[i] = dp[j]+1;
                 }
             }          
         }
-        
+
+        //최대 길이 탐색
         int max = -1;
         for(int i=0; i<N; i++){
             max = dp[i] > max? dp[i] : max;    
