@@ -1,18 +1,16 @@
-N, K = map(int, input().split())
-
-
+n, k = map(int, input().split())
 coins = []
-for _ in range(N):
+
+for i in range(n):
     coins.append(int(input()))
+    
 coins.sort(reverse=True)
 
-
-
-answer = 0
-for coin in coins:
-    if K >= coin:
-        answer += K // coin
-        K %= coin 
-        if K <= 0:
-       		break
-print(answer)
+ans = 0
+for i in coins:
+    if k==0:
+        break
+    ans += k//i
+    k %= i
+    
+print(ans)
