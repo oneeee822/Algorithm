@@ -5,14 +5,14 @@ class Solution {
         int answer = 1;
         HashMap<String, Integer> hm = new HashMap<>();
         
-        for(int i = 0; i < clothes.length; i++){
-            hm.put(clothes[i][1], hm.getOrDefault(clothes[i][1], 0) + 1);
+        for (String[] row : clothes) {
+            hm.put(row[1], hm.getOrDefault(row[1], 1) + 1); // 안 입는 경우를 위해 1로 초기화
         }
         
         for(String key:hm.keySet()){
-            answer *= (hm.get(key)+1);
+            answer *= hm.get(key);
         }
-        answer -= 1;
-        return answer;
+        
+        return answer-1; //모든 옷을 안 입는 경우 제외
     }
 }
