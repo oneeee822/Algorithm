@@ -1,35 +1,39 @@
-import java.util.*;
+import java.util.Queue;
+import java.util.LinkedList;
 
 class Solution {
     public int solution(int bridge_length, int weight, int[] truck_weights) {
         int answer = 0;
+        
+        Queue<Integer> wait = new LinkedList<>();
         Queue<Integer> bridge = new LinkedList<>();
         
-        for(int i = 0; i < bridge_length; i++){
-            bridge.offer(0);
+        for(int truck : truck_weights){
+            wait.add(truck);
         }
         
-        if(bridge_length == 1) return truck_weights.length+1;
-        if(truck_weights.length == 1) return bridge_length+1;
+        for (int i = 0; i < bridge_length; i++) {
+            bridge.add(0);
+        }
         
-        int idx = 0;
-        int curWeight = 0;
-       
-        while(idx < truck_weights.length) {
-            curWeight -= bridge.poll();
-            answer++; 
+        int w = 0;
+        
+        while(!bridge.isEmpty()){
+            w-= bridge.poll();
+            answer++;
             
-           
-            if(curWeight + truck_weights[idx] <= weight) {
-                bridge.offer(truck_weights[idx]);
-                curWeight += truck_weights[idx++];
+            if(!wait.isEmpty()){
+                if(w + wait.peek()<=weight){
+                    bridge.add(wait.peek());
+                    w += wait.poll();
+                }
+                else{
+                    bridge.add(0);
+                }
             }
-           
-            else bridge.offer(0);
+            
         }
         
-       
-        return answer + bridge_length;
+        return answer;
     }
 }
-
