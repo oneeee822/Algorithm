@@ -1,36 +1,35 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 class Solution {
-    boolean[] visited;
-    ArrayList<String> allRoute; 
+    ArrayList<String> route; 
+    boolean [] visited;
     
     public String[] solution(String[][] tickets) {
         String[] answer = {};
         int cnt = 0;
+        route = new ArrayList<>();
         visited = new boolean[tickets.length];
-        allRoute = new ArrayList<>();
         
         dfs("ICN", "ICN", tickets, cnt);
         
-        Collections.sort(allRoute);
-        answer = allRoute.get(0).split(" ");
+        Collections.sort(route);
         
-        return answer;
+        return route.get(0).split(" ");
     }
     
-    public void dfs(String start, String route, String[][] tickets, int cnt){
+    private void dfs(String s, String r, String[][] tickets, int cnt){
         if(cnt == tickets.length){
-            allRoute.add(route);
+            route.add(r);
             return;
         }
         
         for(int i=0; i<tickets.length; i++){
-            if(start.equals(tickets[i][0]) && !visited[i]){
+            if(s.equals(tickets[i][0]) && !visited[i]){
                 visited[i] = true;
-                dfs(tickets[i][1], route+" "+tickets[i][1], tickets, cnt+1);
+                dfs(tickets[i][1], r+" "+tickets[i][1], tickets, cnt + 1);
                 visited[i] = false;
             }
         }
     }
-    
 }
