@@ -6,67 +6,65 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static boolean[] check;
     static int[][] arr;
-    static int n, m, v;
-    
-    static StringBuilder sb = new StringBuilder();
     static Queue<Integer> q = new LinkedList<>();
+    static boolean[] visit;
+    static int N, M, V;
+    static StringBuilder sb = new StringBuilder();
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
         StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        v = Integer.parseInt(st.nextToken());
         
-        arr = new int[n+1][n+1];
-        check = new boolean[n+1];
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        V = Integer.parseInt(st.nextToken());
         
-        for(int i =0; i<m; i++){
+        arr = new int[N+1][N+1];
+        visit = new boolean[N+1];
+        
+        for(int i=0; i<M; i++){
             StringTokenizer str = new StringTokenizer(br.readLine());
             
-            int u = Integer.parseInt(str.nextToken());
-            int v = Integer.parseInt(str.nextToken());
-            
-            arr[u][v] = arr[v][u] = 1;
+            int A = Integer.parseInt(str.nextToken());
+            int B = Integer.parseInt(str.nextToken());
+            arr[A][B] = arr[B][A] = 1;
         }
         
-        dfs(v);
+        dfs(V); 
         sb.append("\n");
         
-        check = new boolean[n+1];
-        bfs(v);
+        visit = new boolean[N+1];
+        bfs(V);
         
         System.out.println(sb);
     }
     
-    public static void dfs(int v){
-        check[v] = true;
-		sb.append(v+" ");
+    private static void dfs(int V){
+        visit[V] = true;
+        sb.append(V+" ");
         
-        for(int i=1; i<=n; i++){
-            if(arr[v][i]==1 && !check[i])
+        for(int i=1; i<=N; i++){
+            if(!visit[i] && arr[V][i]==1){
                 dfs(i);
-        }
-	}
-    
-    public static void bfs(int v){
-        q.add(v);
-        check[v]=true;
-        
-        while(!q.isEmpty()){
-            v = q.poll();
-            sb.append(v+" ");
-            
-            for(int i=1; i<=n; i++){
-                if(arr[v][i]==1 && !check[i]){
-                    q.add(i);
-                    check[i]=true;
-                }
             }
         }
     }
-
+    
+    private static void bfs(int V){
+        visit[V] = true;
+        q.add(V);
+        
+        while(!q.isEmpty()){
+            int node = q.poll();
+            sb.append(node+ " ");
+            
+            for(int i=1; i<=N; i++){
+                if(!visit[i] && arr[node][i]==1){
+                    q.add(i);
+                    visit[i] = true;
+                }
+            }  
+        }
+    }
 }
