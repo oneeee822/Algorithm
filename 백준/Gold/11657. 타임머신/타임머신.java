@@ -1,84 +1,73 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 class Bus{
-	int u;
-	int v;
-	int val;
-	public Bus(int u,int v, int val) {
-		this.u = u;
-		this.v = v;
-		this.val = val;
-	}
+    int depart, arrive, time;
+    public Bus(int depart, int arrive, int time){
+        this.depart = depart;
+        this.arrive = arrive;
+        this.time = time;
+    }
 }
-public class Main {
-	static int n,m;
-	static Bus[] e;
-	static long[] dist;
-	static int INF = Integer.MAX_VALUE;
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		
-		e = new Bus[m];
-		dist = new long[n+1];
-		// 최단 거리 테이블 초기화
-		for(int i=1; i<n+1; i++) {
-			dist[i] = INF;
-		}
-		
-		for(int i=0; i<m; i++) {
-			st = new StringTokenizer(br.readLine());
-			int u = Integer.parseInt(st.nextToken());
-			int v = Integer.parseInt(st.nextToken());
-			int val = Integer.parseInt(st.nextToken());
-			e[i] = new Bus(u,v,val);
-		}
-		
-		if(bellmanford(1)) { // 음수 순환 존재하면 -1 출력 
-			System.out.println(-1);
-		}
-		else {
-			// 1번 노드를 제외한 다른 모든 노드로 가기 위한 최단거리 출력 
-			for(int i=2; i<n+1; i++) {
-				if(dist[i] == INF) {// 도달할 수 없으면 -1 
+
+class Main{
+    static int N, M;
+    static Bus[] b;
+    static long[] times;
+    
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));         
+        StringTokenizer st = new StringTokenizer(br.readLine());
+         
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        b = new Bus[M];
+        times = new long[N+1];
+                                                 
+        Arrays.fill(times,Long.MAX_VALUE);       
+                                            
+        for(int i=0; i<M; i++){
+            st = new StringTokenizer(br.readLine());
+            int A = Integer.parseInt(st.nextToken());
+            int B = Integer.parseInt(st.nextToken());
+            int C = Integer.parseInt(st.nextToken());   
+            
+            b[i] = new Bus(A, B, C); 
+        }                    
+                                           
+        if(bellmanford()){
+            System.out.println(-1);
+        }else{
+            for(int i=2; i<=N; i++) {
+				if(times[i] == Long.MAX_VALUE) {
 					System.out.println("-1");
 				}
-				else { // 최단 거리 출력 
-					System.out.println(dist[i]);
+				else {
+					System.out.println(times[i]);
 				}
 			}
-		}
-		
-	}
-	static boolean bellmanford(int start){
-		dist[start] = 0;
-		
-		// n번 반복 
-		for(int i=1; i<n+1; i++) {
-			// 매 반복마다 모든 간선을 확인 
-			for(int j=0; j<m; j++) {
-				int cur = e[j].u;
-				int next = e[j].v;
-				int cost = e[j].val;
-						
-				if(dist[cur] == INF) continue;
-				// 현재 간선을 거쳐서 다른 노드로 이동하는 거리가 짧은 경우 
-				if(dist[next] > (dist[cur] + cost)) {
-					dist[next] = dist[cur] + cost;
-							
-					// n번째 라운드에서 값이 갱신된다면 음수 순환 존재 
-					if (i == n) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
-	
+        }                                         
+    }
+    
+    static boolean bellmanford(){
+        times[1] = 0;
+        
+        for(int i=1; i<=N; i++){
+            for(int j=0; j<M; j++){
+                int curDepart = b[j].depart;
+                int curArrive = b[j].arrive;
+                int cost = b[j].time;
+                
+                if(times[curDepart]==Long.MAX_VALUE) continue;
+                if(times[curArrive]> times[curDepart] + cost){
+                    times[curArrive] = times[curDepart] + cost;
+                    if (i == N) return true;				
+                }
+            }
+        }
+        return false;
+    }
 }
