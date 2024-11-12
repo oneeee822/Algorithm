@@ -48,17 +48,12 @@ public class Main
 	        }
 	        
 	        for(int i=0; i<2; i++){
-	            int now = 0;
-	            if(i==0){
-	                now = cur + UD[0];
-	            }
-	            else{
-	                now = cur - UD[1];
-	            }
-	            if(now>0 && now<=F && visited[now]!=true){
-	                q.add(now);
-	                visited[now]=true;
-	                floorCnt[now] = floorCnt[cur] + 1;
+	            int next = (i==0)? cur + UD[0]: cur - UD[1];
+	            
+	            if(next>0 && next<=F && visited[next]!=true){
+	                q.add(next);
+	                visited[next]=true;
+	                floorCnt[next] = floorCnt[cur] + 1;
 	            }
 	        }
 	        
