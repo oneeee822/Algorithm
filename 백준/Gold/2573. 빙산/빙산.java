@@ -9,6 +9,7 @@ public class Main{
     static int N, M;
     static int[][] glacier;
     static boolean[][] visited;
+    static int[][] meltAmount;
     static int[] dx = {0,0,-1,1};
     static int[] dy = {1,-1,0,0};
     
@@ -21,6 +22,7 @@ public class Main{
 		
 	    glacier = new int[N][M];
 	    visited = new boolean[N][M];
+	    meltAmount = new int[N][M];
 		
 		for(int i=0; i<N; i++){
 		    st = new StringTokenizer(br.readLine());
@@ -53,7 +55,13 @@ public class Main{
                 return;
             }
             
-            melt();
+            for (int i = 0; i< N; i++) {
+                for (int j = 0; j < M; j++) {
+                    glacier[i][j] -= meltAmount[i][j];
+                    if (glacier[i][j] < 0) glacier[i][j] = 0;
+                }
+            }
+            
 		    year++;
 		}
 	}
@@ -68,47 +76,21 @@ public class Main{
 	        int curx = current[0];
 	        int cury = current[1];
 	        
+	        int seaCount = 0;
 	        for(int i=0; i<4; i++){
 	            int nx = curx + dx[i];
 	            int ny = cury + dy[i];
 	            
 	            if(nx<0 || ny<0 || nx>=N || ny>=M) continue;
+	            if(glacier[nx][ny]==0) seaCount++;
 	            if(glacier[nx][ny]>0 && !visited[nx][ny]){
 	                q.add(new int[] {nx,ny});
 	                visited[nx][ny]=true;
 	            }
 	        }
+	        
+	        meltAmount[curx][cury] = seaCount;
+	        
 	    }
-	}
-	
-	public static void melt(){
-	    int[][] meltAmount = new int[N][M];
-	    
-	    for(int x=0; x<N; x++){
-	        for(int y=0; y<M; y++){
-	            if(glacier[x][y]>0){
-	                int seaCount = 0;
-	                for(int i=0; i<4; i++){
-	                    int nx = x + dx[i];
-	                    int ny = y + dy[i];
-	            
-	                    if(nx<0 || ny<0 || nx>=N || ny>=M) continue;
-	                    if(glacier[nx][ny]==0){
-	                        seaCount++;
-	                    }
-	                }
-	                
-	                meltAmount[x][y] = seaCount;
-	            }
-	        }
-	    }
-	    
-	    for (int x = 0; x < N; x++) {
-            for (int y = 0; y < M; y++) {
-                glacier[x][y] -= meltAmount[x][y];
-                if (glacier[x][y] < 0) glacier[x][y] = 0;
-            }
-        }
-        
 	}
 }
