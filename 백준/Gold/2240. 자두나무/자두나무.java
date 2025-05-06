@@ -1,66 +1,45 @@
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.util.StringTokenizer;
 
-public class Main {
-
+public class Main
+{
 	public static void main(String[] args) throws IOException {
-
+	    
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-
-		st = new StringTokenizer(br.readLine(), " ");
-		int T = Integer.parseInt(st.nextToken());
-		int W = Integer.parseInt(st.nextToken());
-
-		int[] tree = new int[T + 1];
-		for (int i = 1; i <= T; i++) {
-			tree[i] = Integer.parseInt(br.readLine());
-		}
-
-		int pos = 1;
-		int[][] dp = new int[T + 1][W + 1];
-		int answer = 0;
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		for (int t = 1; t <= T; t++) {
-			int treePos = tree[t];
-			
-			for (int w = 0; w <= W; w++) {
-				if (w == 0) {
-					pos = 1;
-					if (treePos == pos) {
-						dp[t][w] = dp[t - 1][w] + 1;
-					} 
-					else {
-						dp[t][w] = dp[t - 1][w];
-					}
-					
-					continue;
-				}
-				
-				if(w % 2 == 0) {
-					pos = 1;
-					if(pos == treePos) {
-						dp[t][w] = Math.max(dp[t-1][w] + 1, dp[t-1][w-1]);
-					} 
-					else {
-						dp[t][w] = Math.max(dp[t-1][w-1] + 1, dp[t-1][w]);
-					}
-				} 
-				else {
-					pos = 2;
-					if(pos == treePos) {
-						dp[t][w] = Math.max(dp[t-1][w] + 1, dp[t-1][w-1]);
-					} 
-					else {
-						dp[t][w] = Math.max(dp[t-1][w-1] + 1, dp[t-1][w]);
-					}
-				}
-				
-				answer = Math.max(answer, dp[t][w]);		
-			}
-			
+		int t = Integer.parseInt(st.nextToken());
+		int w = Integer.parseInt(st.nextToken());
+		
+		int[] arr = new int[t+1];
+		int[][][] dp = new int[3][t+1][w+2];
+		int ans = 0;
+		
+		for(int i=1; i<=t; i++){
+		    arr[i] = Integer.parseInt(br.readLine());
 		}
 		
-		System.out.println(answer);
+		for(int i=1; i<=t; i++){
+		    for(int j=1; j<=w+1; j++){
+		        if(arr[i]==1){
+		            dp[1][i][j] = Math.max(dp[1][i-1][j]+1, dp[2][i-1][j-1]+1);
+		            dp[2][i][j] = Math.max(dp[1][i-1][j-1], dp[2][i-1][j]);
+		        }
+		        else{
+		            if(i==1 && j==1) continue;
+		            dp[1][i][j] = Math.max(dp[1][i-1][j], dp[2][i-1][j-1]);
+		            dp[2][i][j] = Math.max(dp[2][i-1][j]+1, dp[1][i-1][j-1]+1);
+		        }
+		    }
+		}
+		
+		for(int i=1; i<=w+1; i++){
+		    ans = Math.max(ans, Math.max(dp[1][t][i], dp[2][t][i]));
+		}
+		
+		System.out.println(ans);
+		
 	}
 }
