@@ -16,14 +16,6 @@ class Solution {
             }
             else {
                 j++;
-                if(j < B.length){
-                    if(A[i]==B[j]) continue;
-                    else if(A[i]<B[j]){
-                        answer++;
-                        i++;
-                        j++;
-                    }
-                }
             }
             
         }
