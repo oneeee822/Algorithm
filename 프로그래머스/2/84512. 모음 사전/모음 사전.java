@@ -1,27 +1,31 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 class Solution {
-    static List<String> list;
-    static String [] words = {"A", "E", "I", "O", "U"};
+    String[] alphabet = {"A","E","I","O","U"};
+    List<String> list = new ArrayList<>();
+    
     public int solution(String word) {
         int answer = 0;
-        list = new ArrayList<>();
+        
         dfs("", 0);
-        int size = list.size();
-        for (int i = 0; i < size; i++) {
-            if (list.get(i).equals(word)) {
-                answer = i;
+        
+        for(int i=0; i<list.size(); i++){
+            if(word.equals(list.get(i))){
+                answer = i+1;
                 break;
             }
         }
         return answer;
     }
-
-    static void dfs(String str, int len) {
-        list.add(str);
-        if (len == 5) return;
-        for (int i = 0; i < 5; i++) {
-            dfs(str + words[i], len + 1);
+    
+    public void dfs(String str, int depth){
+        if(depth==5){
+            return;
+        }
+        for(int i=0; i<5; i++){
+            String next = str + alphabet[i];
+            list.add(next);
+            dfs(next, depth+1);
         }
     }
 }
