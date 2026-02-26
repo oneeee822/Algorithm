@@ -1,31 +1,28 @@
 import java.util.*;
 
 class Solution {
-    String[] alphabet = {"A","E","I","O","U"};
-    List<String> list = new ArrayList<>();
-    
+    static String[] dict = {"A","E","I","O","U"};
+    static int answer = 0;
+    static int cnt = 0;
     public int solution(String word) {
-        int answer = 0;
-        
-        dfs("", 0);
-        
-        for(int i=0; i<list.size(); i++){
-            if(word.equals(list.get(i))){
-                answer = i+1;
-                break;
-            }
+        for(int i=0; i<5; i++){
+            dfs(dict[i], word);
         }
         return answer;
     }
     
-    public void dfs(String str, int depth){
-        if(depth==5){
+    public void dfs(String str, String word){
+        if(answer!=0 || str.length()>5) return;
+        if(str.equals(word)){
+            answer = cnt+1;
             return;
         }
+
+        cnt++;
+
         for(int i=0; i<5; i++){
-            String next = str + alphabet[i];
-            list.add(next);
-            dfs(next, depth+1);
+            String newStr = str+dict[i];
+            dfs(newStr, word);
         }
     }
 }
