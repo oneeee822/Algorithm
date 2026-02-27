@@ -1,23 +1,24 @@
 import java.util.Arrays;
+import java.util.Collections;
 
 class Solution {
     public String solution(int[] numbers) {
         String answer = "";
-        String[] arr = new String[numbers.length];
+        String[] list = new String[numbers.length];
         
-        for(int i = 0; i<numbers.length; i++)
-            arr[i]= String.valueOf(numbers[i]);
+        for(int i=0; i<numbers.length; i++){
+            list[i] = String.valueOf(numbers[i]);
+        }
         
+        Arrays.sort(list, (a, b)-> (b+a).compareTo(a+b));
         
-        Arrays.sort(arr, (s1, s2)->(s2+s1).compareTo(s1+s2));
+        StringBuilder sb = new StringBuilder();
+        for(String s : list){
+            sb.append(s);
+        }
         
-        for(int i = 0; i<numbers.length; i++)
-            answer+=arr[i];
+        if (list[0].equals("0")) return "0";
         
-        
-        if(answer.charAt(0)=='0')
-            answer = "0";
-        
-        return answer;
+        return sb.toString();
     }
 }
