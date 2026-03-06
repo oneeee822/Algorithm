@@ -1,68 +1,32 @@
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.HashSet;
+import java.util.*;
 
 class Solution {
+    int answer = Integer.MAX_VALUE;
     public int solution(String begin, String target, String[] words) {
         
-        if (!isInWords(target, words)) {
-            return 0;
-        }
+        boolean[] visited = new boolean[words.length];
+    
+        dfs(begin, target, words, 0, visited);
         
-        return bfs(begin, target, words);
+        return answer<Integer.MAX_VALUE? answer : 0 ;
     }
     
-    private boolean isInWords(String target, String[] words) {
-        for (String word : words) {
-            if (word.equals(target)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    private int bfs(String begin, String target, String[] words) {
-        int cnt = 0;
-        Queue<String> q = new LinkedList<>();
-        HashSet<String> visited = new HashSet<>();
-        
-        q.add(begin);
-        visited.add(begin);
-        
-        while (!q.isEmpty()) {
-            int size = q.size();
-            cnt++;
-            
-            for (int i = 0; i < size; i++) {
-                String str = q.poll();
-                
-                if (str.equals(target)) {
-                    return cnt - 1;  // 현재 레벨에서 목표를 찾았으므로 cnt - 1을 반환
-                }
-
-                
-                for (String word : words) {
-                    if (!visited.contains(word) && canTrans(str, word)) {
-                        q.add(word);
-                        visited.add(word);
-                    }
-                }   
-            }
+    public void dfs(String begin, String target, String[] words, int cnt, boolean[] visited){
+        if(begin.equals(target)){
+            answer = Math.min(answer, cnt);
         }
         
-        return 0;
-    }
-    
-    private boolean canTrans(String str, String word) {
-        int diff = 0;
-        
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) != word.charAt(i)) {
-                diff++;
+        for(int i=0; i<words.length; i++){
+            int diff=0;
+            for(int j=0; j<begin.length(); j++){
+                if(diff>1) break;
+                if(begin.charAt(j)!=words[i].charAt(j)) diff++;
+            }
+            if(diff==1 && !visited[i]){
+                visited[i] = true;
+                dfs(words[i], target, words, cnt+1, visited);
+                visited[i] = false;
             }
         }
-        
-        return diff == 1;
     }
 }
-
