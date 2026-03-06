@@ -1,4 +1,4 @@
-# [Gold V] 자두나무 - 2240 
+# [Gold IV] 자두나무 - 2240 
 
 [문제 링크](https://www.acmicpc.net/problem/2240) 
 
