@@ -1,37 +1,43 @@
-import java.util.Arrays;
+import java.util.*;
 
 class Solution {
-    int parent[];
-    
-    public int find(int x){
-        if(parent[x]==x) return x;
-        else return parent[x] = find(parent[x]);
-    }
-    
-    public void union(int a, int b){
-        a = find(a);
-        b = find(b);
-        if(a!=b){
-            parent[b]=a;
-        }
-    }
+    int[] parent = new int[100];
     
     public int solution(int n, int[][] costs) {
         int answer = 0;
-        parent = new int[n];
-        
-        Arrays.sort(costs, (o1, o2)-> o1[2] - o2[2]);
-        
-        for(int i =0; i<n; i++){
-            parent[i]=i;
+
+        for(int i=0; i<n; i++){
+            parent[i] = i;
         }
         
-        for(int i =0; i<costs.length; i++){
-            if(find(costs[i][0])!=find(costs[i][1])){
-                union(costs[i][0], costs[i][1]);
-                answer+=costs[i][2];
+        Arrays.sort(costs, (a,b) -> Integer.compare(a[2], b[2]));
+
+        int edge = 0;
+        for(int i=0; i<costs.length; i++){
+            if(edge==n-1) break;
+            
+            if(union(costs[i][0], costs[i][1])){
+                edge++;
+                answer += costs[i][2];
             }
+            
         }
         return answer;
+    }
+    
+    public boolean union(int i, int j){
+        int rootA = find(i);
+        int rootB = find(j);
+        
+        if(rootA!=rootB) {
+            parent[rootB] = rootA;
+            return true;
+        }
+        return false;
+    }
+    
+    public int find(int i){
+        if(parent[i]==i) return i;
+        return find(parent[i]);
     }
 }
