@@ -1,39 +1,35 @@
-import java.util.Queue;
-import java.util.LinkedList;
+import java.util.*;
 
 class Solution {
     public int solution(int bridge_length, int weight, int[] truck_weights) {
-        int answer = 0;
-        
-        Queue<Integer> wait = new LinkedList<>();
-        Queue<Integer> bridge = new LinkedList<>();
+        Queue<Integer> q = new LinkedList<>();
+        Queue<int[]> bridge = new LinkedList<>();
         
         for(int truck : truck_weights){
-            wait.add(truck);
+            q.add(truck);
         }
         
-        for (int i = 0; i < bridge_length; i++) {
-            bridge.add(0);
-        }
-        
-        int w = 0;
+        int curTime = 0;
+        int curWeight = q.peek();
+        bridge.add(new int[] {bridge_length, q.poll()});
         
         while(!bridge.isEmpty()){
-            w-= bridge.poll();
-            answer++;
-            
-            if(!wait.isEmpty()){
-                if(w + wait.peek()<=weight){
-                    bridge.add(wait.peek());
-                    w += wait.poll();
-                }
-                else{
-                    bridge.add(0);
+            // 다리에서 트럭 제거
+            if(!bridge.isEmpty()){
+                if(curTime>=bridge.peek()[0]) {
+                    curWeight-=bridge.poll()[1];
                 }
             }
             
+            // 무게 남으면 트럭 다리에 올리기
+            while(!q.isEmpty()&&q.peek()+curWeight<=weight){
+                int carTruck = q.poll();
+                bridge.add(new int[] {curTime+bridge_length, carTruck});
+                curWeight += carTruck;
+            }
+            curTime++;
         }
         
-        return answer;
+        return curTime;
     }
 }
