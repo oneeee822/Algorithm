@@ -1,31 +1,33 @@
-import java.util.PriorityQueue;
+import java.util.*;
 
 class Solution {
     public int solution(int[] scoville, int K) {
-        int answer = 0;
         PriorityQueue<Integer> pq = new PriorityQueue<>();
+        
+        int answer = 0;
         
         for(int s : scoville){
             pq.add(s);
         }
         
-        while(pq.size()>1){
-            if(pq.peek()<K){
-                int small = pq.poll();
-                pq.add(small+pq.poll()*2);
+        while(!pq.isEmpty()){
+            int cur = pq.poll();
+   
+            if(cur>=K) {
+                pq.add(cur);
+                break;
+            }
+            
+            if(!pq.isEmpty()){
+                int next = pq.poll();
+                pq.add(cur + next*2);
                 answer++;
             }
             else{
-                return answer;
+                return -1;
             }
         }
         
-        if(pq.peek()>=K){
-            return answer;
-        }
-        else {
-            return -1;
-        }
-        
+        return answer;
     }
 }
