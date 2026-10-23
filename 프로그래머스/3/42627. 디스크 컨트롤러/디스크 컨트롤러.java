@@ -1,34 +1,42 @@
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.*;
 
 class Solution {
     public int solution(int[][] jobs) {
-        // jobs를 요청 시간 기준으로 정렬
-        Arrays.sort(jobs, (o1, o2) -> o1[0] - o2[0]);
-
-        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> o1[1] - o2[1]);
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> {
+            if(a[1]!=b[1]) return Integer.compare(a[1], b[1]);
+            return Integer.compare(a[2], b[2]);
+        });
+        List<int[]> jobList = new ArrayList<>();
         
-        int time = 0;  // 현재 시간
-        int index = 0; // jobs 배열에서 현재 처리 중인 작업의 인덱스
-        int totalDuration = 0; // 모든 작업의 총 대기 시간
-        
-        while (index < jobs.length || !pq.isEmpty()) {
-            // 현재 시간까지 도착한 모든 작업을 우선순위 큐에 추가
-            while (index < jobs.length && jobs[index][0] <= time) {
-                pq.add(jobs[index]);
-                index++;
-            }
-            
-            if (!pq.isEmpty()) {
-                int[] currentJob = pq.poll();
-                time += currentJob[1]; // 현재 작업을 수행하는 데 걸리는 시간만큼 현재 시간 증가
-                totalDuration += time - currentJob[0]; // 현재 작업의 총 대기 시간 누적
-            } else {
-                // 만약 큐가 비어있고 더 처리할 작업이 남아 있다면, 시간을 다음 작업의 도착 시간으로 설정
-                time = jobs[index][0];
-            }
+        for(int i=0; i<jobs.length; i++){
+            jobList.add(new int[]{jobs[i][0],jobs[i][1], i});
         }
         
-        return totalDuration / jobs.length; // 평균 대기 시간 반환
+        jobList.sort((a,b) -> Integer.compare(a[0],b[0]));
+        
+       
+        int curTime = 0;
+        int time = 0;
+        int idx=0;
+        while (idx < jobs.length || !pq.isEmpty()) {
+            // 현재 시각까지 요청된 작업을 pq에 넣기
+            while(idx < jobs.length &&curTime>=jobList.get(idx)[0]){
+                pq.add(new int[]{jobList.get(idx)[0], jobList.get(idx)[1], jobList.get(idx)[2]});
+                idx++;
+            }
+            
+            // pq가 비어 있다면 다음 작업의 요청 시각으로 이동
+            if(pq.isEmpty()){
+                curTime = jobList.get(idx)[0];
+                continue;
+            }
+
+            // pq에서 작업 하나를 꺼내 처리하기
+            int[] cur = pq.poll();
+            curTime += cur[1];
+            time += curTime - cur[0];
+        }
+        
+        return time/jobs.length;
     }
 }
