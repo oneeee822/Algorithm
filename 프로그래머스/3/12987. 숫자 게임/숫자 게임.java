@@ -1,24 +1,30 @@
-import java.util.Arrays;
+import java.util.*;
 
 class Solution {
     public int solution(int[] A, int[] B) {
+        PriorityQueue<Integer> a = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> b = new PriorityQueue<>(Collections.reverseOrder());
         int answer = 0;
-        int i = 0, j = 0;
         
-        Arrays.sort(A);
-        Arrays.sort(B);
-        
-        while(i<A.length && j<B.length){
-            if(A[i]<B[j]){
-                answer ++;
-                i++;
-                j++;
-            }
-            else {
-                j++;
-            }
-            
+        for(int i=0; i<A.length; i++){
+            a.add(A[i]);
+            b.add(B[i]);
         }
+        
+        while(!a.isEmpty()){
+            int curA = a.poll();
+            while(!b.isEmpty()){
+                if(curA<b.peek()) {
+                    b.poll();
+                    answer++;
+                    break;
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        
         return answer;
     }
 }
